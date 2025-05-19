@@ -5,7 +5,7 @@ pipeline {
         nodejs 'node16'
     }
     environment {
-       SCANNER_HOME=tool sonar
+       SCANNER_HOME=tool sonar-sanner
     }
     stages {
         stage('Clean') {
@@ -18,10 +18,10 @@ pipeline {
               withSonarQubeEnv('sonarqube')  {
                    sh ''' 	
                        sonar-scanner \
-                          -Dsonar.projectKey=Bingoonelinegame \
-                          -Dsonar.sources= . \
-                          -Dsonar.host.url=http://34.46.17.202:9000 \
-                          -Dsonar.login=sqa_f850199be1f7543719fbd609586d1ae6d86a7952 '''
+                           -Dsonar.projectKey=akworld-onelinegame \
+                            -Dsonar.sources=. \
+                            -Dsonar.host.url=http://34.72.160.36:9000 \
+                            -Dsonar.token=sqp_ac3daf90c479db3418bca1a876d2e7efbab1b023 '''
     
                 } 
 
