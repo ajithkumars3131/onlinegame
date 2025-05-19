@@ -10,7 +10,7 @@ pipeline {
         stage('sonarqube-check'){
             steps{
                   withSonarQubeEnv(credentialsId: 'sonar-token') {
-                    sh ''' sonar-scanner \
+                    sh '''  $SCANNER_HOME/bin/sonar-scanner \
                            -Dsonar.projectKey=Bingoonelinegame \
                            -Dsonar.sources=. \
                            -Dsonar.host.url=http://34.46.17.202:9000 \
