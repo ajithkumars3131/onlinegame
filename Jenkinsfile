@@ -12,9 +12,9 @@ pipeline {
             }
         }
         stage('Checkout') {
-       steps {
-        git url: 'git@github.com:ajithkumars3131/onlinegame.git', branch: 'main'
-             }
+           steps {
+             git url: 'git@github.com:ajithkumars3131/onlinegame.git', branch: 'main'
+            }
         }  
         stage('sonarqube-check'){
             steps{
