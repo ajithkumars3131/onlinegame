@@ -9,7 +9,7 @@ pipeline {
         }
         stage('sonarqube-check'){
             steps{
-              withSonarQubeEnv('sonarqube') {
+              withEnv(["PATH=${env.PATH}:/opt/sonar-scanner/bin"]) {
                    sh ''' 	
                        sonar-scanner \
                           -Dsonar.projectKey=Bingoonelinegame \
