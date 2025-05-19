@@ -13,10 +13,10 @@ pipeline {
         }
         stage('sonarqube-check'){
             steps{
-             withEnv(["SCANNER_HOME=/opt/sonar-scanner"]) {
+             
                withSonarQubeEnv('sonarqube')  {
                    sh ''' 	
-                       sonar-scanner \
+                       /opt/sonar-scanner/bin/sonar-scanner \
                            -Dsonar.projectKey=akworld-onelinegame \
                             -Dsonar.sources=. \
                             -Dsonar.host.url=http://34.72.160.36:9000 \
@@ -24,7 +24,7 @@ pipeline {
     
                  } 
 
-              }
+              
             }
         }
     }
