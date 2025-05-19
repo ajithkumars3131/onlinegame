@@ -4,9 +4,7 @@ pipeline {
         jdk 'jdk17'
         nodejs 'node16'
     }
-    environment {
-       SCANNER_HOME=tool sonar-sanner
-    }
+   
     stages {
         stage('Clean') {
             steps {
@@ -15,7 +13,8 @@ pipeline {
         }
         stage('sonarqube-check'){
             steps{
-              withSonarQubeEnv('sonarqube')  {
+             withEnv(["SCANNER_HOME=/opt/sonar-scanner"]) {
+               withSonarQubeEnv('sonarqube')  {
                    sh ''' 	
                        sonar-scanner \
                            -Dsonar.projectKey=akworld-onelinegame \
