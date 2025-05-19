@@ -22,9 +22,9 @@ pipeline {
                             -Dsonar.host.url=http://34.72.160.36:9000 \
                             -Dsonar.token=sqp_ac3daf90c479db3418bca1a876d2e7efbab1b023 '''
     
-                } 
+                 } 
 
-
+              }
             }
         }
     }
