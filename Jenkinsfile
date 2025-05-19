@@ -9,7 +9,7 @@ pipeline {
         }
         stage('sonarqube-check'){
             steps{
-              withSonarQubeEnv('sonar-server') {
+              withSonarQubeEnv('sonarqube') {
                    sh ''' 	
                        sonar-scanner \
                           -Dsonar.projectKey=BingoOnlineProject \
