@@ -60,12 +60,22 @@ pipeline {
                script {
                    withDockerRegistry(credentialsId: 'docker', toolName: 'docker') {
                    sh "sudo docker build -t onlinegame . "
-                   sh "sudo docker tag onlinegame ajithkumars3131/onlinegame:tagname"
-                   sh "docker push ajithkumars3131/onlinegame:tagname "
+                   sh "sudo docker tag onlinegame ajithkumars3131/onlinegame:latest"
+                   sh "docker push ajithkumars3131/onlinegame:latest"
                  }
                }
             }
         }
+      stage('Trivy scanning on Docker Image') {
+            steps {
+                sh "trivy image ajithkumars3131/onlinegame:latest > trivydockerimage.txt"
+            }
+        }
+      stage('Deploy the Docker Image/NodeJs Appl to the Env as container') {
+            steps {
+                sh 'docker run -d --name onlinegame -p 3000:3000 ajithkumars3131/onlinegame:latest'
+            }
+        }       
         
     }
 }
