@@ -26,7 +26,7 @@ pipeline {
                         -Dsonar.projectKey=akworld-online \
                         -Dsonar.sources=. \
                         -Dsonar.host.url=http://35.200.197.171:9000 \
-                        -Dsonar.token=sqa_494fb06170008af241569900c3790d4e012a3a84
+                        -Dsonar.token=sqp_646aab6bf3861d6f3912fc4a10212da318813e44
                     '''
                 }
             } 
