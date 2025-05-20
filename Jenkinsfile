@@ -22,7 +22,7 @@ pipeline {
             steps {
                withSonarQubeEnv('SonarQube-Server') {
                    sh ''' 
-                          $SCANNER_HOME/bin/sonar-scanner \
+                          /var/lib/jenkins/tools/hudson.plugins.sonar.SonarRunnerInstallation/SonarQube/bin/sonar-scanner \    
                           sonar-scanner \
                           -Dsonar.projectKey=akworld-online \
                           -Dsonar.sources=. \
