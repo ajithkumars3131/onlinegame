@@ -55,6 +55,17 @@ pipeline {
                 sh "trivy fs . > trivyscanreport.txt"
             }
         }
+     stage('Docker Build using the Dockerfile and then push it to DockerHub') {
+            steps {
+               script {
+                   withDockerRegistry(credentialsId: 'docker', toolName: 'docker') {
+                   sh "docker build -t onlinegame . "
+                   sh "docker tag onlinegame ajithkumars3131/onlinegamet:latest"
+                   sh "docker push ajithkumars3131/onlinegame:latest "
+                 }
+               }
+            }
+        }
         
     }
 }
