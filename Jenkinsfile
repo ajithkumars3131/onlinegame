@@ -50,10 +50,11 @@ pipeline {
             }
         }
     }
-    post {
-        always {
-            archiveArtifacts artifacts: '**/dependency-check-report.*', allowEmptyArchive: true
-            cleanWs() 
+     stage('Trivy FS Scanning') {
+            steps {
+                sh "trivy fs . > trivyscanreport.txt"
+            }
         }
+        
     }
 }
