@@ -39,5 +39,26 @@ pipeline {
                       }    
                 }
         } 
-}
+        stage('Install Dependencies') {
+            steps{
+                sh "npm install"
+            }
+        }
+        stage('OWASP FS SCANs') {
+             steps {
+                dependencyCheck additionalArguments: '--scan ./ --disableYarnAudit --disableNodeAudit', odcInstallation: 'DP'
+                dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
+            }
+
+        }
+    
+    
+    
+    
+    }
+
+
+
+
+
 }
