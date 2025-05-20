@@ -22,7 +22,7 @@ pipeline {
             steps {
                withSonarQubeEnv('SonarQube-Server') {
                    sh '''    
-                        SonarQube \
+                        /var/lib/jenkins/tools/hudson.plugins.sonar.SonarRunnerInstallation/SonarQube/bin/sonar-scanner \
                         -Dsonar.projectKey=akworld-online \
                         -Dsonar.sources=. \
                         -Dsonar.host.url=http://35.200.197.171:9000 \
