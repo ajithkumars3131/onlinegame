@@ -60,8 +60,8 @@ pipeline {
                script {
                    withDockerRegistry(credentialsId: 'docker', toolName: 'docker') {
                    sh "sudo docker build -t onlinegame . "
-                   sh "sudo docker tag onlinegame ajithkumars3131/onlinegamet:latest"
-                   sh "sudo docker push ajithkumars3131/onlinegame:latest "
+                   sh "sudo docker tag onlinegame ajithkumars3131/onlinegame:tagname"
+                   sh "docker push ajithkumars3131/onlinegame:tagname "
                  }
                }
             }
