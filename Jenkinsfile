@@ -13,7 +13,7 @@ pipeline {
         }
         stage('Checkout') {
            steps {
-             git url: 'git@github.com:ajithkumars3131/onlinegame.git', branch: 'main'
+             git clone 'git@github.com:ajithkumars3131/onlinegame.git', branch: 'main'
             }
         }  
     }    
