@@ -11,7 +11,7 @@ pipeline {
                   cleanWs()
             }
         }
-        stage('Checkout') {
+        stage('Checkout-new') {
            steps {
              git clone 'git@github.com:ajithkumars3131/onlinegame.git', branch: 'main'
             }
