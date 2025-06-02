@@ -21,7 +21,7 @@ jobs:
         java-version: '17'
 
     - name: 🧪 Run Unit Tests
-      run: mvn clean test
+      run: mvn test
 
     - name: 🔁 Run Integration Tests
       run: mvn verify -DskipUnitTests
