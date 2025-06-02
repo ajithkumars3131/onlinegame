@@ -1,0 +1,42 @@
+name: Maven CI with SonarQube
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-and-analyze:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: 🧾 Checkout code
+      uses: actions/checkout@v4
+
+    - name: ☕ Set up Java 17
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: '17'
+
+    - name: 🧪 Run Unit Tests
+      run: mvn clean test
+
+    - name: 🔁 Run Integration Tests
+      run: mvn verify -DskipUnitTests
+    - name: Checksyte check
+      run: mvn checkstyle:checkstyle
+      
+
+ 
+    - name: 🔍 SonarQube Scan
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      run: |
+        mvn sonar:sonar \
+          -Dsonar.projectKey=your_project_key \
+          -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} \
+          -Dsonar.login=$SONAR_TOKEN
+
+    -
