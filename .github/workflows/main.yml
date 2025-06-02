@@ -34,8 +34,8 @@ jobs:
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       run: |
-        mvn sonar:sonar \
-          -Dsonar.projectKey=your_project_key \
+        mvn clean verify sonar:sonar \
+          -Dsonar.projectKey=online_project_githubaction \
           -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} \
           -Dsonar.login=$SONAR_TOKEN
 
