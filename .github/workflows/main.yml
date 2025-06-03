@@ -1,46 +1,31 @@
-name: Maven CI with SonarQube
+name: 🛡️ Grype Docker Security Scan
 
 on:
   push:
-    branches: [main]
-  pull_request:
-    branches: [main]
+    branches: [ main ]
 
 jobs:
-  build-and-analyze:
+  grype-scan:
     runs-on: ubuntu-latest
 
     steps:
-    - name: 🧾 Checkout code
-      uses: actions/checkout@v4
-      
+      - name: 📥 Checkout Code
+        uses: actions/checkout@v3
 
-    - name: ☕ Set up Java 17
-      uses: actions/setup-java@v4
-      with:
-        distribution: 'temurin'
-        java-version: '17'
+      - name: 🐳 Build Docker Image
+        run: |
+          docker build -t onelinegame:latest .
 
-    - name: 🧪 Run Unit Tests
-      run: mvn test
-      working-directory: onlinegame
+      - name: 📥 Install Grype
+        run: |
+          curl -sSfL https://raw.githubusercontent.com/anchore/grype/main/install.sh | sh -s -- -b /usr/local/bin
 
-    - name: 🔁 Run Integration Tests
-      run: mvn verify -DskipUnitTests
-      working-directory: onlinegame
-    - name: Checksyte check
-      run: mvn checkstyle:checkstyle
-      working-directory: onlinegame
-      
+      - name: 🔍 Scan Image with Grype
+        run: |
+          grype onelinegame:latest -o table > grype-report.txt
 
- 
-    - name: 🔍 SonarQube Scan
-      env:
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      run: |
-        mvn clean verify sonar:sonar \
-          -Dsonar.projectKey=online_project_githubaction \
-          -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} \
-          -Dsonar.login=$SONAR_TOKEN
-
-        working-directory: onlinegame
+      - name: 📤 Upload Grype Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: grype-scan-report
+          path: grype-report.txt
