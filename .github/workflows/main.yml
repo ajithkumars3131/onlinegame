@@ -29,3 +29,21 @@ jobs:
         with:
           name: grype-scan-report
           path: grype-report.txt
+      - name: 📥 Install Trivy
+        run: |
+          sudo apt-get update
+          sudo apt-get install wget apt-transport-https gnupg lsb-release -y
+          wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo apt-key add -
+          echo "deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main" | sudo tee -a /etc/apt/sources.list.d/trivy.list
+          sudo apt-get update
+          sudo apt-get install trivy -y
+
+      - name: 🔍 Scan Docker Image with Trivy
+        run: |
+          trivy image --severity HIGH,CRITICAL --format table --output trivy-report.txt onelinegame:latest
+
+      - name: 📤 Upload Trivy Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: trivy-scan-report
+          path: trivy-report.txt
