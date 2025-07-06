@@ -29,7 +29,7 @@ jobs:
         --format json -o trivy_os_results.json myapp:${{ github.sha }}
 
     - name: 📤 Upload Trivy Report as Artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4   # ✅ Updated version
       with:
         name: trivy-os-scan-results
         path: trivy_os_results.json
