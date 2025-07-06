@@ -50,7 +50,7 @@ jobs:
         echo "${{ steps.dogea.outputs.response }}" > dogea_report.txt
 
     - name: 📦 Upload DOGEA AI Report (Text)
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: dogea-ai-report
         path: dogea_report.txt
