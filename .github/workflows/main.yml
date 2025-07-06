@@ -1,49 +1,56 @@
-name: 🛡️ Grype Docker Security Scan
+name: DOGEA OS Vulnerability Scan with AI
 
 on:
   push:
     branches: [ main ]
 
 jobs:
-  grype-scan:
+  scan-and-evaluate:
     runs-on: ubuntu-latest
 
     steps:
-      - name: 📥 Checkout Code
-        uses: actions/checkout@v3
+    - name: 🧾 Checkout Code
+      uses: actions/checkout@v3
 
-      - name: 🐳 Build Docker Image
-        run: |
-          docker build -t onelinegame:latest .
+    - name: 🐳 Build Docker Image
+      run: |
+        docker build -t myapp:${{ github.sha }} .
 
-      - name: 📥 Install Grype
-        run: |
-          curl -sSfL https://raw.githubusercontent.com/anchore/grype/main/install.sh | sh -s -- -b /usr/local/bin
+    - name: 🛡️ Install Trivy
+      run: |
+        sudo apt-get install wget apt-transport-https gnupg lsb-release -y
+        wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo apt-key add -
+        echo deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main | sudo tee -a /etc/apt/sources.list.d/trivy.list
+        sudo apt-get update && sudo apt-get install trivy -y
 
-      - name: 🔍 Scan Image with Grype
-        run: |
-          grype onelinegame:latest -o table > grype-report.txt
+    - name: 🔍 Scan Docker Image with Trivy (OS Only)
+      run: |
+        trivy image --scanners vuln --vuln-type os --severity CRITICAL,HIGH \
+        --format json -o trivy_os_results.json myapp:${{ github.sha }}
 
-      - name: 📤 Upload Grype Report
-        uses: actions/upload-artifact@v4
-        with:
-          name: grype-scan-report
-          path: grype-report.txt
-      - name: 📥 Install Trivy
-        run: |
-          sudo apt-get update
-          sudo apt-get install wget apt-transport-https gnupg lsb-release -y
-          wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo apt-key add -
-          echo "deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main" | sudo tee -a /etc/apt/sources.list.d/trivy.list
-          sudo apt-get update
-          sudo apt-get install trivy -y
+    - name: 📤 Upload Trivy Report as Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: trivy-os-scan-results
+        path: trivy_os_results.json
 
-      - name: 🔍 Scan Docker Image with Trivy
-        run: |
-          trivy image --severity HIGH,CRITICAL --format table --output trivy-report.txt onelinegame:latest
+    - name: 🤖 Send Scan Results to DOGEA AI API
+      id: dogea
+      run: |
+        echo "Sending to DOGEA..."
+        RESPONSE=$(curl -s -X POST http://13.127.102.53:5000/scan \
+          -H "Content-Type: application/json" \
+          --data @trivy_os_results.json)
 
-      - name: 📤 Upload Trivy Report
-        uses: actions/upload-artifact@v4
-        with:
-          name: trivy-scan-report
-          path: trivy-report.txt
+        echo "DOGEA Response: $RESPONSE"
+        echo "response=$RESPONSE" >> "$GITHUB_OUTPUT"
+
+    - name: 📝 Save DOGEA Response to TXT Report
+      run: |
+        echo "${{ steps.dogea.outputs.response }}" > dogea_report.txt
+
+    - name: 📦 Upload DOGEA AI Report (Text)
+      uses: actions/upload-artifact@v3
+      with:
+        name: dogea-ai-report
+        path: dogea_report.txt
